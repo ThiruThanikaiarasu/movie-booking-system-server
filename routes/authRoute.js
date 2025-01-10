@@ -12,6 +12,8 @@ const { verifyUser } = require('../middleware/authMiddleware')
  *   post:
  *     summary: User signup
  *     description: Endpoint to register a new user with name, email, and password.
+ *     tags:
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -64,6 +66,8 @@ router.post(
  *   post:
  *     summary: User login
  *     description: Allows users to log in by providing their credentials (username, password).
+ *     tags:
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -103,6 +107,8 @@ router.post(
  *   post:
  *     summary: User logout
  *     description: Logs the user out by invalidating the SessionID cookie.
+ *     tags:
+ *       - Authentication
  *     security:
  *       - cookieAuth: []  # This defines that the endpoint uses cookies for authentication.
  *     responses:
