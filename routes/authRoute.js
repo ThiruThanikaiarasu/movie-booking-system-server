@@ -2,10 +2,12 @@ const express = require('express')
 const router = express.Router()
 
 const { signup } = require('../controllers/authController')
+const validateRequest = require('../middleware/validateRequest')
+const { userSchema } = require('../validators/userValidator')
 
 /**
  * @swagger
- * /signup:
+ * /user/signup:
  *   post:
  *     summary: User signup
  *     description: Endpoint to register a new user with name, email, and password.
@@ -35,16 +37,20 @@ const { signup } = require('../controllers/authController')
  *               - email
  *               - password
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully signed up the user.
  *       400:
  *         description: Bad request, invalid parameters.
+ *       409:
+ *         description: Conflict, Email Id already exist.
  *       500:
  *         description: Internal server error.
  */
 
 router.post(
     '/signup',
+
+    validateRequest(userSchema),
 
     signup
 )

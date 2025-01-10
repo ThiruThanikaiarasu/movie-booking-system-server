@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 /**
  * @swagger
@@ -67,5 +69,26 @@ const userSchema = new mongoose.Schema(
         collection: 'users'
     }
 )
+
+userSchema.pre('save', function(next) {
+    const user = this
+
+    if(!user.isModified('password')) return next()
+    bcrypt.genSalt(10, (error, salt) => {
+        if(error) return next(error)
+
+        bcrypt.hash(user.password, salt, (error, hash) => {
+            if(error) return next(error)
+
+            user.password = hash
+            next()
+        })
+    })
+})
+
+userSchema.methods.generateAccessJWT = function() {
+    let payload = { id : this._id}
+    return jwt.sign(payload, process.env.ACCESS_TOKEN, {expiresIn: '30d'})
+}
 
 module.exports = mongoose.model.users || mongoose.model('users', userSchema)
