@@ -13,6 +13,7 @@ const { CSS_URL } = require('./configurations/constants')
 const authRoute = require('./routes/authRoute')
 const languageRoute = require('./routes/languageRoute')
 const genreRoute = require('./routes/genreRoute')
+const movieRoute = require('./routes/movieRoute')
 
 
 app.use(cors())
@@ -29,6 +30,7 @@ app.get('/', (request, response) => {
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/language', languageRoute)
 app.use('/api/v1/genre', genreRoute)
+app.use('/api/v1/movie', movieRoute)
 
 connect() 
     .then( () => {
