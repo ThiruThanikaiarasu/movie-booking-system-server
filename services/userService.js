@@ -2,6 +2,10 @@ const bcrypt = require('bcryptjs')
 
 const userModel = require("../models/userModel")
 
+const findUserById = (id) => {
+    return userModel.findOne({ _id: id })
+}
+
 const findUserByEmail = (email) => {
     return userModel.findOne({ email })
 }
@@ -21,6 +25,7 @@ const validatePassword = (userEnteredPassword, actualPassword) => {
 }
 
 module.exports = {
+    findUserById,
     findUserByEmail,
     findUserByEmailWithPassword,
     createUser,

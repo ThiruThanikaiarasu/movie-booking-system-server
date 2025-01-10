@@ -2,6 +2,7 @@ const { setResponseBody } = require("../utils/responseFormatter")
 const { findUserByEmail, createUser, validatePassword, findUserByEmailWithPassword } = require('../services/userService')
 const { generateToken, setTokenCookie } = require("../services/tokenServices")
 
+
 const signup = async (request, response) => {
     const { name, email, password } = request.body
 

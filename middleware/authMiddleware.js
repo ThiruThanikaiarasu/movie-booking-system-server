@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const { setResponseBody } = require('../utils/responseFormatter')
-const userModel = require('../models/userModel')
-const { findUserById } = require('../services/authService')
+const { findUserById } = require('../services/userService')
 
 
 const parseCookies = (cookieString) => {
