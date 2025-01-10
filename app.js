@@ -30,7 +30,7 @@ app.get('/', (request, response) => {
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/language', languageRoute)
 app.use('/api/v1/genre', genreRoute)
-app.use('/api/v1/movie', movieRoute)
+app.use('/api/v1/movies', movieRoute)
 
 connect() 
     .then( () => {
