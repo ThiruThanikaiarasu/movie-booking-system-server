@@ -2,7 +2,13 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 
+const swaggerUI = require("swagger-ui-express")
+
 const connect = require('./database/connection')
+const swaggerSpec = require('./configurations/swaggerConfig')
+const { CSS_URL } = require('./configurations/constants')
+
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerSpec, {customCssUrl: CSS_URL}))
 
 app.get('/', (request, response) => {
     response.status(200).send({ message : "Server running successfully"})
