@@ -1,3 +1,4 @@
+const path = require('path')
 const swaggerJsdoc = require('swagger-jsdoc')
 
 const swaggerOptions = {
@@ -18,8 +19,14 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./routes/*.js', './models/*.js'], 
+  apis: [
+    path.join(__dirname, '/../routes/*.js'),
+    path.join(__dirname, '/../models/*.js')
+
+  ] 
 }
+console.log(path.join(__dirname, '/../routes/*.js'))
+console.log(path.join(__dirname, '/../models/*.js'))
 
 const options = {
     customCss: '.swagger-ui .topbar { display: none }'
