@@ -4,6 +4,7 @@ const router = express.Router()
 const validateRequest = require('../middleware/validateRequest')
 const { genreSchema } = require('../validators/genreValidator')
 const { addGenre } = require('../controllers/genreController')
+const { verifyUser, verifyAdmin } = require('../middleware/authMiddleware')
 
 /**
  * @swagger
@@ -13,6 +14,8 @@ const { addGenre } = require('../controllers/genreController')
  *     description: Endpoint to add a new genre to the system.
  *     tags:
  *       - Genre
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -31,6 +34,10 @@ const { addGenre } = require('../controllers/genreController')
  *         description: Genre added successfully.
  *       400:
  *         description: Bad request, validation error.
+ *       401:
+ *         description: Unauthorized. Token not found or expired.
+ *       403:
+ *         description: Forbidden. User is not authorized.
  *       409:
  *         description: Conflict, Genre already exists.
  *       500:
@@ -39,7 +46,12 @@ const { addGenre } = require('../controllers/genreController')
 
 router.post(
     '/',
+
+    verifyUser,
+    verifyAdmin,
+
     validateRequest(genreSchema),
+
     addGenre
 )
 

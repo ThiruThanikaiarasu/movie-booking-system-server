@@ -4,6 +4,7 @@ const router = express.Router()
 const validateRequest = require('../middleware/validateRequest')
 const { languageSchema } = require('../validators/languageValidator')
 const { addLanguage } = require('../controllers/languageController')
+const { verifyUser, verifyAdmin } = require('../middleware/authMiddleware')
 
 
 /**
@@ -14,6 +15,8 @@ const { addLanguage } = require('../controllers/languageController')
  *     description: Endpoint to add a new language to the system.
  *     tags:
  *       - Language
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -32,6 +35,10 @@ const { addLanguage } = require('../controllers/languageController')
  *         description: Language added successfully.
  *       400:
  *         description: Bad request, validation error.
+ *       401:
+ *         description: Unauthorized. Token not found or expired.
+ *       403:
+ *         description: Forbidden. User is not authorized.
  *       409:
  *         description: Conflict, Language already exist.
  *       500:
@@ -40,6 +47,9 @@ const { addLanguage } = require('../controllers/languageController')
 
 router.post(
     '/',
+
+    verifyUser,
+    verifyAdmin,
 
     validateRequest(languageSchema),
 
