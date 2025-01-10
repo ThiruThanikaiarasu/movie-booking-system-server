@@ -34,7 +34,8 @@ const verifyUser = async (request, response, next) => {
             const user = await findUserById(id)
             request.user = {
                 _id: user._id,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
 
             next()
