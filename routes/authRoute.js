@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-const { signup } = require('../controllers/authController')
+const { signup, login } = require('../controllers/authController')
 const validateRequest = require('../middleware/validateRequest')
-const { userSchema } = require('../validators/userValidator')
+const { signupSchema, loginSchema } = require('../validators/userValidator')
 
 /**
  * @swagger
@@ -51,9 +51,48 @@ const { userSchema } = require('../validators/userValidator')
 router.post(
     '/signup',
 
-    validateRequest(userSchema),
+    validateRequest(signupSchema),
 
     signup
+)
+
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: User login
+ *     description: Allows users to log in by providing their credentials (username, password).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: Successfully logged in.
+ *       400:
+ *         description: Bad Request, validation error
+ *       401:
+ *         description: Unauthorized, invalid credentials
+ *       500:
+ *         description: Internal Server Error
+ */
+
+router.post(
+    '/login',
+
+    validateRequest(loginSchema),
+
+    login
 )
 
 module.exports = router

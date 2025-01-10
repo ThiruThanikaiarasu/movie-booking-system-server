@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const userSchema = Joi.object({
+const signupSchema = Joi.object({
     name: Joi.string()
         .trim()
         .min(2)
@@ -45,4 +45,21 @@ const userSchema = Joi.object({
         })
 })
 
-module.exports = { userSchema }
+
+const loginSchema = Joi.object({
+    email: Joi.string().email().required().messages({
+        'string.base': 'Email must be a string',
+        'string.email': 'Email must be a valid email address',
+        'any.required': 'Email is required'
+    }),
+    password: Joi.string().min(8).required().messages({
+        'string.base': 'Password must be a string',
+        'string.min': 'Password must be at least 8 characters long',
+        'any.required': 'Password is required'
+    })
+})
+
+module.exports = { 
+    signupSchema,
+    loginSchema
+}
