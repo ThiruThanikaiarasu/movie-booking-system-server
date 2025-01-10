@@ -22,9 +22,11 @@ const mongoose = require('mongoose')
  *           maxLength: 100
  *           example: "Inception"
  *         genre:
- *           type: string
+ *           type: array
+ *           items:
+ *             type: string
  *           description: Genre of the movie
- *           example: "Science Fiction"
+ *           example: ["Science Fiction"]
  *         duration:
  *           type: integer
  *           description: Duration of the movie in minutes
@@ -108,7 +110,7 @@ const mongoose = require('mongoose')
  *                 example: "Christopher Nolan"
  *       example:
  *         title: "Inception"
- *         genre: "Science Fiction"
+ *         genre: ["Science Fiction"]
  *         duration: 148
  *         language: "English"
  *         thumbnail:
@@ -136,7 +138,7 @@ const movieSchema = new mongoose.Schema(
             maxlength: [100, 'Title must not exceed 100 characters']
         },
         genre: {
-            type: String, 
+            type: [String], 
             required: [true, 'Genre is a mandatory field']
         },
         duration: {

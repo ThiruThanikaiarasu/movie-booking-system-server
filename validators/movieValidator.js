@@ -13,12 +13,14 @@ const movieValidator = Joi.object({
             'any.required': 'Title is a mandatory field'
         }),
 
-    genre: Joi.string()
+        genre: Joi.array()
+        .items(Joi.string().required())
         .required()
         .messages({
-            'string.base': 'Genre should be a type of string',
+            'array.base': 'Genre should be a type of array',
+            'array.includes': 'Each genre item should be a type of string',
             'any.required': 'Genre is a mandatory field'
-        }),
+        }),    
 
     duration: Joi.number()
         .min(1)
@@ -38,7 +40,6 @@ const movieValidator = Joi.object({
             'any.required': 'Language is a mandatory field'
         }),
 
-    // File validation for thumbnail
     thumbnail: Joi.object({
         file: Joi.object({
             mimetype: Joi.string()
