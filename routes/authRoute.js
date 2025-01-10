@@ -7,7 +7,7 @@ const { userSchema } = require('../validators/userValidator')
 
 /**
  * @swagger
- * /user/signup:
+ * /auth/signup:
  *   post:
  *     summary: User signup
  *     description: Endpoint to register a new user with name, email, and password.
@@ -23,6 +23,7 @@ const { userSchema } = require('../validators/userValidator')
  *                 description: The user's full name.
  *                 minLength: 3
  *                 maxLength: 50
+ *                 example: John Doe
  *               email:
  *                 type: string
  *                 description: The user's email address.
