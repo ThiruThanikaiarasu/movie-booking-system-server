@@ -16,7 +16,7 @@ const mongoose = require('mongoose')
  *           maxLength: 50
  *           example: "English"
  *       example:
- *         name: "English"
+ *         language: "English"
  */
 
 const languageSchema = new mongoose.Schema(
