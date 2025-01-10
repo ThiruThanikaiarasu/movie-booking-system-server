@@ -58,7 +58,17 @@ const login = async (request, response) => {
     }
 }
 
+const logout = (request, response) => {
+    response.clearCookie('SessionID', {
+        httpOnly: true, 
+        secure: true,  
+        sameSite: 'None',  
+    })
+    response.status(200).send(setResponseBody("Successfully logged out", null, null))
+}
+
 module.exports = {
     signup,
-    login
+    login,
+    logout
 }
