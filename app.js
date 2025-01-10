@@ -11,6 +11,7 @@ const swaggerSpec = require('./configurations/swaggerConfig')
 const { CSS_URL } = require('./configurations/constants')
 
 const authRoute = require('./routes/authRoute')
+const languageRoute = require('./routes/languageRoute')
 
 
 app.use(cors())
@@ -25,6 +26,7 @@ app.get('/', (request, response) => {
 })
 
 app.use('/api/v1/auth', authRoute)
+app.use('/api/v1/language', languageRoute)
 
 connect() 
     .then( () => {
