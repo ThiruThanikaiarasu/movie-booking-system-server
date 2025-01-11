@@ -17,6 +17,7 @@ const movieRoute = require('./routes/movieRoute')
 const theaterRoute = require('./routes/theaterRoute')
 const screenRoute = require('./routes/screenRoute')
 const showRoute = require('./routes/showRoute')
+const bookingRoute = require('./routes/bookingRoute')
 
 
 app.use(cors())
@@ -37,6 +38,7 @@ app.use('/api/v1/movies', movieRoute)
 app.use('/api/v1/theater', theaterRoute)
 app.use('/api/v1/screen', screenRoute)
 app.use('/api/v1/show', showRoute)
+app.use('/api/v1/booking', bookingRoute)
 
 connect() 
     .then( () => {

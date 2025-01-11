@@ -2,6 +2,10 @@ const { SEAT_ROWS } = require("../configurations/constants")
 const showModel = require("../models/showModel")
 
 
+const findShowById = (id) => {
+    return showModel.findOne({ _id: id })
+}
+
 const findShow = (screen, movie, showTime) => {
     return showModel.findOne({ screen, movie, showTime })
 }
@@ -187,6 +191,7 @@ const findShowsByKeyword = async (keyword, limit, page) => {
 }
 
 module.exports = {
+    findShowById,
     findShow,
     createANewShow,
     getAllAvailableShowsFromToday,

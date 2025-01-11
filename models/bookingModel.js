@@ -63,7 +63,7 @@ const bookingSchema = new mongoose.Schema(
             required: [true, 'Show ID is required'],
         },
         seats: {
-            type: [ string ],
+            type: [ String ],
             required: [true, 'Seats are required'],
             validate: {
                 validator: function (value) {
