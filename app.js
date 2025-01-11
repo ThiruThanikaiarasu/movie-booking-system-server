@@ -14,6 +14,7 @@ const authRoute = require('./routes/authRoute')
 const languageRoute = require('./routes/languageRoute')
 const genreRoute = require('./routes/genreRoute')
 const movieRoute = require('./routes/movieRoute')
+const theaterRoute = require('./routes/theaterRoute')
 
 
 app.use(cors())
@@ -31,6 +32,7 @@ app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/language', languageRoute)
 app.use('/api/v1/genre', genreRoute)
 app.use('/api/v1/movies', movieRoute)
+app.use('/api/v1/theater', theaterRoute)
 
 connect() 
     .then( () => {
