@@ -17,7 +17,12 @@ const createANewScreen = async (theater, name, seatRow, seatsPerRow) => {
     return newScreen
 }
 
+const getScreenById = (id) => {
+    return screenModel.findOne({ _id: id })
+}
+
 module.exports = {
     findScreen,
-    createANewScreen
+    createANewScreen,
+    getScreenById
 }

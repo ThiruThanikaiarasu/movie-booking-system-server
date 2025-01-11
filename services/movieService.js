@@ -5,6 +5,12 @@ const languageModel = require('../models/languageModel')
 const movieModel = require('../models/movieModel')
 const { uploadToS3 } = require('./s3Service')
 
+
+
+const getMovieById = (id) => {
+    return movieModel.findOne({ _id: id })
+}
+
 const checkMovieExistence = (title, genre, language) => {
     return movieModel.findOne({ title, genre, language})
 }
@@ -92,6 +98,7 @@ const searchMoviesByKeyword = async (keyword, limit, page) => {
 }
 
 module.exports = {
+    getMovieById,
     checkMovieExistence,
     validateAllGenre,
     validateLanguage,
