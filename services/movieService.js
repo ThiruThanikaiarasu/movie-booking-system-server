@@ -55,9 +55,46 @@ const createANewMovie = async (title, genre, duration, language, censorshipRatin
     }
 }
 
+const searchMoviesByKeyword = async (keyword, limit, page) => {
+    const skip = (page - 1) * limit 
+
+    const movies = await movieModel.aggregate(
+        [
+            {
+                $match: {
+                    $or: [
+                        { title: { $regex: keyword, $options: 'i' } },
+                        { genre: { $regex: keyword, $options: 'i' } }
+                    ]
+                }
+            },
+            {
+                $facet: {
+                    metadata: [
+                        { $count: 'total' }  
+                    ],
+                    movies: [
+                        { $skip: skip },  
+                        { $limit: limit } 
+                    ]
+                }
+            },
+            {
+                $project: {
+                    total: { $arrayElemAt: ['$metadata.total', 0] },
+                    movies: '$movies'
+                }
+            }
+        ]
+    )
+
+    return movies
+}
+
 module.exports = {
     checkMovieExistence,
     validateAllGenre,
     validateLanguage,
-    createANewMovie
+    createANewMovie,
+    searchMoviesByKeyword
 }

@@ -1,6 +1,7 @@
 const S3TransactionError = require("../errors/S3TransactionError")
-const { validateAllGenre, validateLanguage, checkMovieExistence, createANewMovie } = require("../services/movieService")
+const { validateAllGenre, validateLanguage, checkMovieExistence, createANewMovie, searchMoviesByKeyword } = require("../services/movieService")
 const { setResponseBody } = require("../utils/responseFormatter")
+const { searchMoviesQueryValidator } = require("../validators/searchMoviesQueryValidator")
 
 const createMovie = async (request, response) => {
     const { title, genre, duration, language, censorshipRating, releaseDate } = request.body
@@ -36,6 +37,25 @@ const createMovie = async (request, response) => {
     }
 }
 
+const searchMovies = async (request, response) => {
+    const { keyword, limit = 10, page = 1 } = request.query
+
+    await searchMoviesQueryValidator.validateAsync({ limit, page, keyword })
+
+    const limitInt = parseInt(limit, 10)
+    const pageInt = parseInt(page, 10)
+
+    try{
+        const movies = await searchMoviesByKeyword(keyword, limitInt, pageInt)
+
+        return response.status(200).send(setResponseBody("Searched movie result.", null, movies))
+    }
+    catch (error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
-    createMovie
+    createMovie,
+    searchMovies
 }

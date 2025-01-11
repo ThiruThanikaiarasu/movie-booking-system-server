@@ -5,7 +5,8 @@ const { verifyUser, verifyAdmin } = require('../middleware/authMiddleware')
 const validateRequest = require('../middleware/validateRequest')
 const upload = require('../middleware/fileUpload')
 const { movieValidator } = require('../validators/movieValidator')
-const { createMovie } = require('../controllers/movieController')
+const { createMovie, searchMovies } = require('../controllers/movieController')
+const { searchMoviesValidator } = require('../validators/searchMoviesQueryValidator')
 
 
 /**
@@ -110,6 +111,50 @@ router.post(
     validateRequest(movieValidator),
 
     createMovie
+)
+
+
+/**
+ * @swagger
+ * /movies/search:
+ *  get:
+ *   tags:
+ *    - Movies
+ *   summary: Search for projects by keyword
+ *   parameters:
+ *    - name: keyword
+ *      in: query
+ *      description: The keyword to search for in project title, description and tags. 
+ *      required: true
+ *      schema: 
+ *       type: string 
+ *    - name: limit
+ *      in: query
+ *      description: The number of results to return. 
+ *      example: 10
+ *      required: false
+ *      schema: 
+ *       type: string 
+ *    - name: page
+ *      in: query
+ *      description: The page number for pagination. 
+ *      example: 1
+ *      required: false
+ *      schema: 
+ *       type: string 
+ *   responses: 
+ *    200:
+ *      description: Successfully retrieved projects
+ *    400:
+ *      description: Missing keyword in the query parameters
+ *    500:
+ *      description: Internal server error
+ */
+
+router.get(
+    '/search',
+
+    searchMovies
 )
 
 module.exports = router
