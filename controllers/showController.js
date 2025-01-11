@@ -1,6 +1,6 @@
 const { getMovieById } = require("../services/movieService")
 const { getScreenById } = require("../services/screenService")
-const { createANewShow, findShow } = require("../services/showService")
+const { createANewShow, findShow, getAllAvailableShowsFromToday } = require("../services/showService")
 const { setResponseBody } = require("../utils/responseFormatter")
 
 const addShow = async (request, response) => {
@@ -32,6 +32,24 @@ const addShow = async (request, response) => {
     }
 }
 
+const getAllAvailableShow = async (request, response) => {
+    try {
+        const today = new Date()
+        
+        const shows = await getAllAvailableShowsFromToday(today)
+
+        if (shows.length <= 0) {
+            response.status(404).send(setResponseBody("No available shows found for today and after", 'not_found', null))
+        } 
+
+        response.status(200).send(setResponseBody("Shows retrieved successfully", 'success', shows))
+    }
+    catch (error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
-    addShow
+    addShow,
+    getAllAvailableShow
 }

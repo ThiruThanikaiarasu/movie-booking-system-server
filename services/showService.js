@@ -31,7 +31,12 @@ const createANewShow = async (screen, movie, showTime, price, seatRow, seatsPerR
     return newShow
 }
 
+const getAllAvailableShowsFromToday = (date) => {
+    return showModel.find({ showTime: { $gte: date }})
+}
+
 module.exports = {
     findShow,
-    createANewShow
+    createANewShow,
+    getAllAvailableShowsFromToday
 }

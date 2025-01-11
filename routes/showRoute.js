@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const { verifyUser, verifyAdmin } = require('../middleware/authMiddleware')
-const { addShow } = require('../controllers/showController')
+const { addShow, getAllAvailableShow } = require('../controllers/showController')
 const validateRequest = require('../middleware/validateRequest')
 const { showSchema } = require('../validators/showValidator')
 
@@ -72,6 +72,30 @@ router.post(
     validateRequest(showSchema),
 
     addShow
+)
+
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Get all available shows for today and after
+ *     description: Fetches all the shows that are scheduled for today and after.
+ *     tags:
+ *       - Shows
+ *     responses:
+ *       200:
+ *         description: Shows retrieved successfully.
+ *       404:
+ *         description: No available shows found for today and after.
+ *       500:
+ *         description: Internal server error.
+ */
+
+router.get(
+    '/',
+
+    getAllAvailableShow
 )
 
 module.exports = router
