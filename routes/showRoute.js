@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const { verifyUser, verifyAdmin } = require('../middleware/authMiddleware')
-const { addShow, getAllAvailableShow } = require('../controllers/showController')
+const { addShow, getAllAvailableShow, searchAvailableShowsByKeyword } = require('../controllers/showController')
 const validateRequest = require('../middleware/validateRequest')
 const { showSchema } = require('../validators/showValidator')
 
@@ -96,6 +96,51 @@ router.get(
     '/',
 
     getAllAvailableShow
+)
+
+/**
+ * @swagger
+ * /show/search:
+ *   get:
+ *     summary: Search available shows by keyword with pagination
+ *     description: Search for available shows by a keyword and paginate the results.
+ *     tags:
+ *       - Shows
+ *     parameters:
+ *       - in: query
+ *         name: keyword
+ *         required: true
+ *         description: The keyword to search for in movie titles and theater cities.
+ *         schema:
+ *           type: string
+ *           example: "chennai"
+ *       - in: query
+ *         name: limit
+ *         description: Number of results per page.
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *       - in: query
+ *         name: page
+ *         description: The page number.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved shows.
+ *       400:
+ *         description: Bad request, missing or invalid parameters.
+ *       404:
+ *         description: No shows found for the given keyword.
+ *       500:
+ *         description: Internal server error.
+ */
+
+router.get(
+    '/search',
+
+    searchAvailableShowsByKeyword
 )
 
 module.exports = router

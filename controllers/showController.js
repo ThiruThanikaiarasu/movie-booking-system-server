@@ -1,6 +1,6 @@
 const { getMovieById } = require("../services/movieService")
 const { getScreenById } = require("../services/screenService")
-const { createANewShow, findShow, getAllAvailableShowsFromToday } = require("../services/showService")
+const { createANewShow, findShow, getAllAvailableShowsFromToday, findShowsByKeyword } = require("../services/showService")
 const { setResponseBody } = require("../utils/responseFormatter")
 
 const addShow = async (request, response) => {
@@ -49,7 +49,25 @@ const getAllAvailableShow = async (request, response) => {
     }
 }
 
+const searchAvailableShowsByKeyword = async (request, response) => {
+    const { keyword, limit = 10, page = 1 } = request.query
+    const limitInt = parseInt(limit, 10)
+    const pageInt = parseInt(page, 10)
+    try {
+        if(!keyword || keyword.trim().length == 0 ) {
+            return response.status(400).send(setResponseBody("Keyword is mandatory", "validation_error", null))
+        }
+        const shows = await findShowsByKeyword(keyword, limitInt, pageInt)
+
+        response.status(200).send(setResponseBody("Movies retrieved successfully", "success", shows))
+    }
+    catch (error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
     addShow,
-    getAllAvailableShow
+    getAllAvailableShow,
+    searchAvailableShowsByKeyword
 }
