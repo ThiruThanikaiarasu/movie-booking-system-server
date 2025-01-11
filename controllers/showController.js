@@ -33,10 +33,14 @@ const addShow = async (request, response) => {
 }
 
 const getAllAvailableShow = async (request, response) => {
+    const { limit = 10, page = 1 } = request.query
+    const limitInt = parseInt(limit, 10)
+    const pageInt = parseInt(page, 10)
+
     try {
         const today = new Date()
 
-        const shows = await getAllAvailableShowsFromToday(today)
+        const shows = await getAllAvailableShowsFromToday(today, limitInt, pageInt)
 
         if (shows.length <= 0) {
             response.status(404).send(setResponseBody("No available shows found for today and after", 'not_found', null))
@@ -53,6 +57,7 @@ const searchAvailableShowsByKeyword = async (request, response) => {
     const { keyword, limit = 10, page = 1 } = request.query
     const limitInt = parseInt(limit, 10)
     const pageInt = parseInt(page, 10)
+
     try {
         if(!keyword || keyword.trim().length == 0 ) {
             return response.status(400).send(setResponseBody("Keyword is mandatory", "validation_error", null))

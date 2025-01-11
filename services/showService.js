@@ -31,8 +31,68 @@ const createANewShow = async (screen, movie, showTime, price, seatRow, seatsPerR
     return newShow
 }
 
-const getAllAvailableShowsFromToday = (date) => {
-    return showModel.find({ showTime: { $gte: date }})
+const getAllAvailableShowsFromToday = async (date, limit, page) => {
+    const skip = (page - 1) * limit
+    const shows = await showModel.aggregate([
+        {
+            $match: {
+                showTime: { $gte: date }
+            }
+        },
+        {
+            $lookup: {
+                from: 'movies',
+                localField: 'movie',
+                foreignField: '_id',
+                as: 'movieDetails'
+            }
+        },
+        {
+            $unwind: '$movieDetails'
+        },
+        {
+            $lookup: {
+                from: 'screens',
+                localField: 'screen',
+                foreignField: '_id',
+                as: 'screenDetails'
+            }
+        },
+        {
+            $unwind: '$screenDetails'
+        },
+        {
+            $lookup: {
+                from: 'theaters',
+                localField: 'screenDetails.theater',
+                foreignField: '_id',
+                as: 'theaterDetails'
+            }
+        },
+        {
+            $unwind: '$theaterDetails'
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: limit
+        },
+        {
+            $unset: [
+                '__v',
+                'createdAt',
+                'updatedAt',
+                'movieDetails._id',
+                'screenDetails._id',
+                'screenDetails.theater',
+                'theaterDetails._id',
+                'theaterDetails.owner'
+            ]
+        }
+    ])
+
+    return shows
 }
 
 const findShowsByKeyword = async (keyword, limit, page) => {

@@ -83,6 +83,19 @@ router.post(
  *     description: Fetches all the shows that are scheduled for today and after.
  *     tags:
  *       - Shows
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         description: Number of results per page.
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *       - in: query
+ *         name: page
+ *         description: The page number.
+ *         schema:
+ *           type: integer
+ *           example: 1
  *     responses:
  *       200:
  *         description: Shows retrieved successfully.
