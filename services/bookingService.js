@@ -1,4 +1,6 @@
+const { default: mongoose } = require("mongoose")
 const bookingModel = require("../models/bookingModel")
+const { findShowById } = require("./showService")
 
 const isSeatsAvailable = (seatMap, requestedSeats) => {
 
@@ -68,7 +70,98 @@ const createBooking = async (user, showDetails, seats) => {
     }
 }
 
+const findBookingById = async (bookingId) => {
+    const booking = await bookingModel.aggregate([
+        {
+            $match: {
+            _id: new mongoose.Types.ObjectId(bookingId),
+            }
+        },
+        {
+            $lookup: {
+            from: 'shows', 
+            localField: 'show',  
+            foreignField: '_id', 
+            as: 'showDetails' 
+            }
+        },
+        {
+            $unwind: '$showDetails' 
+        },
+        {
+            $lookup: {
+            from: 'screens', 
+            localField: 'showDetails.screen', 
+            foreignField: '_id', 
+            as: 'screenDetails'
+            }
+        },
+        {
+            $unwind: '$screenDetails'
+        },
+        {
+            $lookup: {
+            from: 'movies', 
+            localField: 'showDetails.movie', 
+            foreignField: '_id', 
+            as: 'movieDetails'
+            }
+        },
+        {
+            $unwind: '$movieDetails'
+        },
+        {
+            $project: {
+            _id: 1,
+            seats: 1,
+            totalPrice: 1,
+            showDetails: 1,
+            screenDetails: 1,
+            movieDetails: 1,
+            }
+        }
+    ])
+    return booking
+}
+
+const cancelBookingById = async (booking, show) => {
+    try {
+        const showDetails = await findShowById(show._id)
+        
+        const seatMap = Object.fromEntries(showDetails.seatMap)
+
+        booking.seats.forEach(seat => {
+            const row = seat.charAt(0)
+            const seatNum = parseInt(seat.substring(1)) - 1
+
+            if (!seatMap[row]) {
+                throw new Error(`Invalid row: ${row}`)
+            }
+
+            if (seatNum < 0 || seatNum >= seatMap[row].length) {
+                throw new Error(`Invalid seat number: ${seatNum + 1} in row ${row}`)
+            }
+
+            if (seatMap[row][seatNum] === '0') {
+                throw new Error(`Seat ${seat} was not booked`)
+            }
+
+            seatMap[row] = seatMap[row].substring(0, seatNum) + '0' + seatMap[row].substring(seatNum + 1)
+        })
+
+        showDetails.seatMap = new Map(Object.entries(seatMap))
+        await showDetails.save()
+
+        await bookingModel.findByIdAndDelete(booking._id)
+    } 
+    catch (error) {
+        throw new Error('Error while canceling booking: ' + error.message)
+    }
+}
+
 module.exports = {
     isSeatsAvailable,
-    createBooking
+    createBooking,
+    findBookingById,
+    cancelBookingById
 }

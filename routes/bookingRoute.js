@@ -3,8 +3,9 @@ const router = express.Router()
 
 const { verifyUser } = require('../middleware/authMiddleware')
 const validateRequest = require('../middleware/validateRequest')
-const { bookTickets } = require('../controllers/bookingController')
+const { bookTickets, cancelBooking } = require('../controllers/bookingController')
 const { bookingSchema } = require('../validators/bookingValidator')
+const { isCancellationWithinTimeLimit } = require('../middleware/checkCancelBookingTime')
 
 
 /**
@@ -60,6 +61,43 @@ router.post(
     validateRequest(bookingSchema),
 
     bookTickets
+)
+
+
+/**
+ * @swagger
+ * /booking/{bookingId}:
+ *   delete:
+ *     summary: Cancel a booking
+ *     description: This API allows users to cancel their booking if it is within the allowed time limit (2 hours before the showtime).
+ *     tags:
+ *       - Booking
+ *     parameters:
+ *       - in: path
+ *         name: bookingId
+ *         required: true
+ *         description: The ID of the booking to cancel.
+ *         schema:
+ *           type: string
+ *           example: '678209adea44713bcd267d3a'
+ *     responses:
+ *       '200':
+ *         description: Booking successfully canceled
+ *       '400':
+ *         description: Bad request, cancellation not allowed within 2 hours of the showtime
+ *       '404':
+ *         description: Booking not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+router.delete(
+    '/:bookingId',
+
+    verifyUser,
+    isCancellationWithinTimeLimit,
+
+    cancelBooking
 )
 
 module.exports = router

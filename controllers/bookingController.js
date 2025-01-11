@@ -1,4 +1,4 @@
-const { isSeatsAvailable, createBooking } = require("../services/bookingService")
+const { isSeatsAvailable, createBooking, cancelBookingById } = require("../services/bookingService")
 const { findShowById } = require("../services/showService")
 const { setResponseBody } = require("../utils/responseFormatter")
 
@@ -27,6 +27,19 @@ const bookTickets = async (request, response) => {
     }
 }
 
+const cancelBooking = async (request, response) => {
+    const { booking, showDetails } = request
+    try {
+        await cancelBookingById(booking, showDetails)
+
+        response.status(200).send(setResponseBody("Booking cancelled successfully", null, null))
+    }
+    catch (error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
-    bookTickets
+    bookTickets,
+    cancelBooking
 }
