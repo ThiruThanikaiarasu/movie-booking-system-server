@@ -77,7 +77,7 @@ router.post(
 
 /**
  * @swagger
- * /:
+ * /show:
  *   get:
  *     summary: Get all available shows for today and after
  *     description: Fetches all the shows that are scheduled for today and after.

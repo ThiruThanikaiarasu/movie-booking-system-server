@@ -35,7 +35,7 @@ const addShow = async (request, response) => {
 const getAllAvailableShow = async (request, response) => {
     try {
         const today = new Date()
-        
+
         const shows = await getAllAvailableShowsFromToday(today)
 
         if (shows.length <= 0) {
