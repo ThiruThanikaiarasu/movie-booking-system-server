@@ -40,11 +40,6 @@ const swaggerOptions = {
   ] 
 }
 
-
-const options = {
-    customCss: '.swagger-ui .topbar { display: none }'
-}
-
 const swaggerSpec = swaggerJsdoc(swaggerOptions)
 
 module.exports = swaggerSpec
